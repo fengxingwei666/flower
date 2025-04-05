@@ -1,0 +1,218 @@
+<!-- 声明文档类型为HTML5 -->
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>花语之境 - 智能花艺推荐平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cherry-blossom': '#FFD7E5',
+                        'mint-green': '#98D8C8',
+                        'champagne': '#F5E6CB',
+                    },
+                    fontFamily: {
+                        'serif': ['"Noto Serif SC"', 'serif'],
+                        'sans': ['"Noto Sans SC"', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-pattern {
+            background-color: #FFD7E5;
+            background-image: url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="font-sans">
+    <!-- 导航栏 -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl font-serif font-bold text-cherry-blossom">花语之境</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="text-gray-600 hover:text-cherry-blossom">首页</a>
+                    <a href="#" class="text-gray-600 hover:text-cherry-blossom">花语博物馆</a>
+                    <a href="#" class="text-gray-600 hover:text-cherry-blossom">情景选择</a>
+                    <a href="#" class="text-gray-600 hover:text-cherry-blossom">关于我们</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero 区域 -->
+    <div class="hero-pattern">
+        <div class="max-w-7xl mx-auto px-4 py-20">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-6xl font-serif font-bold text-gray-800 mb-6">
+                    每一束花，都是会说话的爱
+                </h1>
+                <p class="text-xl text-gray-600 mb-8">融合东方花道哲学与西方现代花艺</p>
+                <button class="bg-mint-green text-white px-8 py-3 rounded-lg shadow-lg hover:bg-opacity-90 transition duration-300">
+                    开始定制专属花语
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 智能匹配系统 -->
+    <div class="max-w-7xl mx-auto px-4 py-16">
+        <h2 class="text-3xl font-serif font-bold text-center mb-12">智能花语匹配</h2>
+        <div class="bg-white rounded-lg shadow-xl p-8">
+            <form class="space-y-6" id="flowerForm">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-700 mb-2">收花人姓名</label>
+                        <input type="text" id="recipientName" required class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-mint-green">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">关系类型</label>
+                        <select id="relationship" required class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-mint-green">
+                            <option value="恋人">恋人</option>
+                            <option value="家人">家人</option>
+                            <option value="朋友">朋友</option>
+                            <option value="同事">同事</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">场合</label>
+                        <select id="occasion" required class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-mint-green">
+                            <option value="生日">生日</option>
+                            <option value="求婚">求婚</option>
+                            <option value="慰问">慰问</option>
+                            <option value="祝贺">祝贺</option>
+                            <option value="道歉">道歉</option>
+                            <option value="新家入伙">新家入伙</option>
+                            <option value="结婚纪念日">结婚纪念日</option>
+                            <option value="恋爱纪念日">恋爱纪念日</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">特别要求</label>
+                        <textarea id="specialRequest" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-mint-green" rows="1"></textarea>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="bg-cherry-blossom text-white px-8 py-3 rounded-lg shadow-lg hover:bg-opacity-90 transition duration-300">
+                        生成花语方案
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 功能特色 -->
+    <div class="bg-gray-50 py-16">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-3xl font-serif font-bold text-center mb-12">特色功能</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold mb-4">花语博物馆</h3>
+                    <p class="text-gray-600">探索东西方文化中的花语差异，了解每种花材背后的深层寓意。</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold mb-4">AR预览</h3>
+                    <p class="text-gray-600">即将推出！上传空间照片，模拟花艺摆放效果。</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold mb-4">环保承诺</h3>
+                    <p class="text-gray-600">采用先进的花材冷链运输，确保新鲜度的同时践行环保理念。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 专业背书 -->
+    <div class="max-w-7xl mx-auto px-4 py-16">
+        <div class="text-center">
+            <h2 class="text-3xl font-serif font-bold mb-8">专业花艺团队</h2>
+            <p class="text-gray-600 mb-4">花艺师团队均获得国际花艺协会认证</p>
+            <p class="text-gray-600">拥有超过10年的专业花艺设计经验</p>
+        </div>
+    </div>
+
+    <!-- 用户晒单墙 -->
+    <div class="bg-champagne bg-opacity-30 py-16">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-3xl font-serif font-bold text-center mb-12">幸福瞬间</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-lg overflow-hidden shadow-md transform hover:scale-105 transition duration-300">
+                    <div class="h-64 bg-gray-200">
+                        <img src="https://images.unsplash.com/photo-1562690868-60bbe7293e94?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" 
+                             alt="浪漫玫瑰花束" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <p class="text-gray-600 italic">「收到这束玫瑰的那一刻，他单膝跪地，满眼都是爱意」</p>
+                        <p class="text-gray-500 text-sm mt-2">- 幸福的 Sarah</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg overflow-hidden shadow-md transform hover:scale-105 transition duration-300">
+                    <div class="h-64 bg-gray-200">
+                        <img src="https://images.unsplash.com/photo-1591886960571-74d43a9d4166?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" 
+                             alt="温馨混合花束" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <p class="text-gray-600 italic">「妈妈收到生日花束时开心的笑容，是最珍贵的礼物」</p>
+                        <p class="text-gray-500 text-sm mt-2">- 暖心的小王</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg overflow-hidden shadow-md transform hover:scale-105 transition duration-300">
+                    <div class="h-64 bg-gray-200">
+                        <img src="https://images.unsplash.com/photo-1561181286-d3fee7d55364?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" 
+                             alt="清新向日葵花束" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <p class="text-gray-600 italic">「新家因为这束向日葵变得更加温暖明媚」</p>
+                        <p class="text-gray-500 text-sm mt-2">- 快乐的 Linda</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">花语之境</h3>
+                    <p class="text-gray-400">让每一束花都传递最真挚的情感</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">联系我们</h3>
+                    <p class="text-gray-400">客服电话：xxx-xxxx-xxxx</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">关注我们</h3>
+                    <p class="text-gray-400">微信公众号：花语之境</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">服务时间</h3>
+                    <p class="text-gray-400">周一至周日 9:00-21:00</p>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-700 text-center">
+                <p class="text-gray-400">&copy; 2024 花语之境. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html> 
+</body>
+</html> 
+</body>
+</html> 
