@@ -7,6 +7,8 @@
     <title>花语之境 - 智能花艺推荐平台</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="config.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -23,6 +25,210 @@
                 }
             }
         }
+
+        // DeepSeek 服务类
+        class DeepSeekService {
+            constructor() {
+                this.apiKey = window.config.deepseek.apiKey;
+                this.apiUrl = window.config.deepseek.apiUrl;
+                this.client = axios.create({
+                    baseURL: this.apiUrl,
+                    headers: {
+                        'Authorization': `Bearer ${this.apiKey}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+            }
+
+            // 生成花束推荐
+            async generateFlowerRecommendation(occasion, relationship, specialRequest) {
+                const prompt = `请根据以下信息推荐花束搭配：
+场合：${occasion}
+关系：${relationship}
+特别要求：${specialRequest || '无'}
+
+请提供：
+1. 主花推荐（3-5种）
+2. 配花推荐（2-3种）
+3. 叶材推荐（1-2种）
+4. 东西方文化中的花语解读
+
+请用JSON格式返回，包含以下字段：
+{
+    "mainFlowers": [],
+    "accompaniments": [],
+    "foliage": [],
+    "meanings": {
+        "eastern": "",
+        "western": ""
+    }
+}`;
+
+                try {
+                    const response = await this.client.post('/v1/chat/completions', {
+                        model: "deepseek-chat-7b",
+                        messages: [
+                            {
+                                role: "system",
+                                content: "你是一位专业的花艺师，精通东西方花艺文化。"
+                            },
+                            {
+                                role: "user",
+                                content: prompt
+                            }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 1000
+                    });
+
+                    // 解析返回的JSON字符串
+                    const recommendation = JSON.parse(response.data.choices[0].message.content);
+                    return recommendation;
+                } catch (error) {
+                    console.error('DeepSeek API 调用失败:', error.response?.data || error.message);
+                    throw error;
+                }
+            }
+
+            // 生成祝福语
+            async generateBlessing(occasion, relationship, style) {
+                const prompt = `请为以下场景生成${style}风格的祝福语：
+场合：${occasion}
+关系：${relationship}
+
+要求：
+1. 语言优美，富有诗意
+2. 符合${style}风格
+3. 长度在50-100字之间
+4. 包含对收花人的美好祝愿`;
+
+                try {
+                    const response = await this.client.post('/v1/chat/completions', {
+                        model: "deepseek-chat-7b",
+                        messages: [
+                            {
+                                role: "system",
+                                content: "你是一位擅长写作的诗人，精通各种风格的祝福语创作。"
+                            },
+                            {
+                                role: "user",
+                                content: prompt
+                            }
+                        ],
+                        temperature: 0.8,
+                        max_tokens: 200
+                    });
+
+                    return response.data.choices[0].message.content;
+                } catch (error) {
+                    console.error('DeepSeek API 调用失败:', error.response?.data || error.message);
+                    throw error;
+                }
+            }
+
+            // 生成花束描述
+            async generateFlowerDescription(flowers, occasion) {
+                const prompt = `请为以下花束组合生成一段优美的描述：
+主花：${flowers.join('、')}
+场合：${occasion}
+
+要求：
+1. 描述花束的整体效果
+2. 突出每种花材的特点
+3. 结合场合说明花束的寓意
+4. 语言优美，富有画面感`;
+
+                try {
+                    const response = await this.client.post('/v1/chat/completions', {
+                        model: "deepseek-chat-7b",
+                        messages: [
+                            {
+                                role: "system",
+                                content: "你是一位专业的花艺评论家，擅长用优美的语言描述花艺作品。"
+                            },
+                            {
+                                role: "user",
+                                content: prompt
+                            }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 300
+                    });
+
+                    return response.data.choices[0].message.content;
+                } catch (error) {
+                    console.error('DeepSeek API 调用失败:', error.response?.data || error.message);
+                    throw error;
+                }
+            }
+        }
+
+        // 创建 DeepSeek 服务实例
+        const deepseekService = new DeepSeekService();
+
+        // 更新表单提交处理
+        document.addEventListener('DOMContentLoaded', function() {
+            const flowerForm = document.getElementById('flowerForm');
+            
+            flowerForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // 获取表单数据
+                const formData = {
+                    recipientName: document.getElementById('recipientName').value,
+                    relationship: document.getElementById('relationship').value,
+                    occasion: document.getElementById('occasion').value,
+                    specialRequest: document.getElementById('specialRequest').value
+                };
+
+                try {
+                    // 显示加载状态
+                    const submitButton = document.querySelector('button[type="submit"]');
+                    const originalText = submitButton.textContent;
+                    submitButton.disabled = true;
+                    submitButton.textContent = '正在生成...';
+
+                    // 1. 获取花束推荐
+                    const recommendation = await deepseekService.generateFlowerRecommendation(
+                        formData.occasion,
+                        formData.relationship,
+                        formData.specialRequest
+                    );
+
+                    // 2. 生成祝福语
+                    const message = await deepseekService.generateBlessing(
+                        formData.occasion,
+                        formData.relationship,
+                        'romantic'
+                    );
+
+                    // 3. 生成花束描述
+                    const description = await deepseekService.generateFlowerDescription(
+                        recommendation.mainFlowers,
+                        formData.occasion
+                    );
+
+                    // 将所有数据存储到 sessionStorage
+                    const combinedData = {
+                        ...formData,
+                        recommendation: recommendation,
+                        message: message,
+                        description: description
+                    };
+                    sessionStorage.setItem('flowerFormData', JSON.stringify(combinedData));
+                    
+                    // 使用相对路径跳转
+                    window.location.href = './flower-result.html';
+                } catch (error) {
+                    console.error('生成花语方案失败:', error);
+                    alert('抱歉，生成花语方案时出现错误，请稍后重试。');
+                } finally {
+                    // 恢复按钮状态
+                    submitButton.disabled = false;
+                    submitButton.textContent = originalText;
+                }
+            });
+        });
     </script>
     <style>
         .hero-pattern {
@@ -210,9 +416,5 @@
     </footer>
 
     <script src="assets/js/main.js"></script>
-</body>
-</html> 
-</body>
-</html> 
 </body>
 </html> 
